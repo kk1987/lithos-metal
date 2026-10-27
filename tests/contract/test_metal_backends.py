@@ -74,8 +74,8 @@ def test_m3_ultra_60c_is_its_own_device():
 
 @pytest.mark.parametrize('backend', sorted(BACKENDS))
 def test_every_backend_takes_the_served_model_in_its_prefill_hook(backend):
-    # serving.setup passes the served model: an override without the argument would fail at startup
-    get_backend(backend).serving_prefill_chunk({}, None)
+    # serving.setup passes the served model and the chip configuration: an override without them would fail at startup
+    get_backend(backend).serving_prefill_chunk({}, None, None)
 
 
 def test_unmeasured_backends_have_no_borrowed_tuning():
@@ -99,6 +99,10 @@ def test_m4_max_40c_is_measured_and_the_32c_is_not():
     with pytest.raises(ValueError, match='40 GPU cores'):
         get_backend(config.backend).validate_device(config,
             SimpleNamespace(name='Apple M4 Max', gpu_cores=32, apple_family=9))
+    backend = get_backend('m4_max')
+    assert backend.serving_prefill_chunk({}, None, config) == 512
+    assert backend.serving_prefill_chunk({}, None, configs['apple-m4-max-32c']) is None
+    assert backend.serving_prefill_chunk({}) is None
 
 
 def test_registry_loads_only_chip_configs_and_recipe_references_resolve():
