@@ -301,7 +301,7 @@ def test_kernel_choices_look_up_the_tuners_keys_without_timing():
 
 
 
-@pytest.mark.parametrize('name', ['apple-m3-ultra-60c', 'apple-m4-pro-20c', 'apple-m5-max-40c'])
+@pytest.mark.parametrize('name', ['apple-m3-ultra-60c', 'apple-m4-pro-20c', 'apple-m4-max-40c', 'apple-m5-max-40c'])
 def test_shipped_kernel_choices_are_valid_geometries(name, tmp_path):
     from monolith.backends.metal.config import kernel_choices, load_configs
     configs = load_configs()

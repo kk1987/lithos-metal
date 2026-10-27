@@ -72,6 +72,7 @@
     },
     "note": "written by tools/profile_writer.py from the kernel harnesses (min-of-N over >= 2 GB streamed per point): cost_T = the pass cost relative to a T = 1 shader pass at the best geometry per T; accelerator_<fmt> = gemm_tile at TM rows in the same unit; sibling_order and max_cb_ms are the probes' (p11, p6/p6b) and attention_rows the file's: they carry over; sibling_order measured by p12 on this M4 Max (bus-first hides 100 % of the smaller ALU sibling inside a saturating bus op, ALU-first 32 %) and in the 27B's step: bus_first takes the DSpark round from 30.53-30.55 to 31.13-31.20 tok/s at the default geometry, plain decode level, tokens identical; threadgroups_per_core 2 against 1 is 9 % faster on the round (27.71-27.74 tok/s at 1); max_cb_ms keeps the default: p6b's 15 ms buffers held a second queue's mean wait to 0.47 ms (max 23 ms) and p15 saw no late frames at 8-133 ms buffers"
   },
+  "kernel_choices": "kernel-choices-40c.json",
   "memory_gb": 128,
   "os": "macOS 27.0",
   "gpu_working_set_gb": 107.52,
