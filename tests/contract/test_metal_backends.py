@@ -80,7 +80,7 @@ def test_every_backend_takes_the_served_model_in_its_prefill_hook(backend):
 
 def test_unmeasured_backends_have_no_borrowed_tuning():
     configs = load_configs()
-    for name in ('apple-m3-max-30c', 'apple-m4-pro-16c', 'apple-m4-max-32c', 'apple-m4-max-40c', 'apple-m5-max-32c'):
+    for name in ('apple-m3-max-30c', 'apple-m4-pro-16c', 'apple-m4-max-32c', 'apple-m5-max-32c'):
         config = configs[name]
         assert config.validation == 'unmeasured'
         assert config.accelerator == 'off'
@@ -88,6 +88,17 @@ def test_unmeasured_backends_have_no_borrowed_tuning():
         assert config.threadgroups_per_core == 1
     assert configs['apple-m5-max-40c'].validation == 'measured'
     assert configs['apple-m5-max-40c'].gdn_mixer_fusion['workers'] == 80
+
+
+def test_m4_max_40c_is_measured_and_the_32c_is_not():
+    configs = load_configs()
+    config = configs['apple-m4-max-40c']
+    assert config.validation == 'measured' and config.accelerator == 'on' and config.cost_t
+    assert not config.gdn_mixer_fusion
+    assert configs['apple-m4-max-32c'].validation == 'unmeasured'
+    with pytest.raises(ValueError, match='40 GPU cores'):
+        get_backend(config.backend).validate_device(config,
+            SimpleNamespace(name='Apple M4 Max', gpu_cores=32, apple_family=9))
 
 
 def test_registry_loads_only_chip_configs_and_recipe_references_resolve():
